@@ -1,0 +1,55 @@
+import sys
+import os
+import logging
+from snakemake.io import glob_wildcards, expand
+import glob,os
+import pathlib
+
+
+#run with snakemake --profile slurm --use-conda
+
+
+path = "logs_slurm"
+try:
+
+    os.mkdir(path)
+except OSError:
+    print ("Creation of the directory %s failed" % path)
+else:
+    print ("Successfully created the directory %s " % path)
+
+
+
+inputdir="/dataset/"
+
+
+SAMPLES = ["2_i","3_m","4_b]
+
+fastq_dir = "demux"
+transcriptome = "cellranger_genomes/refdata-gex-mm10-2020-A_TCL1"
+
+
+rule all:
+    input:
+        expand(["{sample_name}.all.done"], sample_name=SAMPLES)
+
+rule velocyto:
+        input:
+                samplefolder = inputdir+"/"+"{sample_name}",
+                gff = "cellranger_genomes/refdata-gex-mm10-2020-A_TCL1/genes/genes.gtf"
+        output:
+                "{sample_name}.all.done"
+        resources: time_min = 50000, mem_mb=250000, cpus = 32
+        shell:
+                """
+                samtools --version
+
+                velocyto run10x \
+                        {input.samplefolder} \
+                        {input.gff}\
+                        --samtools-memory 250000 \
+                        --samtools-threads 32
+
+                touch output
+                """
+
