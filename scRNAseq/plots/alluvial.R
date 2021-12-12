@@ -136,3 +136,60 @@ ggplot(test,
 dev.off()
 
 
+
+
+integrated_rn = readRDS("integrated_rn.Rds")
+
+table(integrated_rn$stim)
+pt <- table(Idents(integrated_rn), integrated_rn$stim)
+pt <- as.data.frame(pt)
+pt$Cluster <- as.character(pt$Var1)
+colnames(pt) = c("Clusters", "Var2", "Freq", "Cluster")
+pt =pt[!grepl("8", pt$Cluster),]
+
+
+pt0 =pt[grepl("A", pt$Var2),]
+
+pt1 =pt[grepl("B", pt$Var2),]
+
+pt2 =pt[grepl("C", pt$Var2),]
+
+pt3 =pt[grepl("D", pt$Var2),]
+
+pt4 =pt[grepl("E", pt$Var2),]
+
+pt5 =pt[grepl("F", pt$Var2),]
+
+pt0$freq  = pt0$Freq/(sum(pt0$Freq)*100)
+pt2$freq  = pt2$Freq/(sum(pt2$Freq)*100)
+pt1$freq  = pt1$Freq/(sum(pt1$Freq)*100)
+pt3$freq  = pt3$Freq/(sum(pt3$Freq)*100)
+pt4$freq  = pt4$Freq/(sum(pt4$Freq)*100)
+pt5$freq  = pt5$Freq/(sum(pt5$Freq)*100)
+
+pt6 = rbind(pt0, pt1, pt2, pt3, pt4, pt5)
+positions <- c("A","B", "C", "D", "E", "F")
+
+
+pdf("alluvial_stim.pdf", 20, 10)
+ggplot(pt6,
+       aes(x = Var2, stratum = Cluster, alluvium = Cluster,
+           y = freq,
+           fill = Cluster)) +
+  #scale_x_discrete(expand = c(.1, .1)) +
+  geom_stratum(alpha = .9) +
+  theme_bw(base_size = 15) +
+  scale_x_discrete(limits = positions)+
+  geom_flow(stat = "alluvium", lode.guidance = "forward") +
+  scale_fill_manual(values=c('ARTERIAL' = '#0066FF',
+                             'BARR_END_CAP' = '#336666',
+                             'CAPILLARY_PLVAP-' = '#399933',
+                             'CAPILLARY_PLVAP+' = '#99CC33',
+                             'TIP_1' = '#6600CC',
+                             'TIP_2' = '#FF99CC',
+                             'TIP_3' = '#FF00FF',
+                             '8' = 'grey',
+                             'VENOUS_PLVAP-' = '#990000',
+                             'VENOUS_PLVAP+' = '#FF6666'))
+
+dev.off()
