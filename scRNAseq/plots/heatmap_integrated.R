@@ -11,6 +11,8 @@ suppressPackageStartupMessages(library(future)) # OK
 suppressPackageStartupMessages(library(cowplot)) # OK
 suppressPackageStartupMessages(library(dplyr)) # OK
 library("ggalluvial")
+library(ComplexHeatmap)
+librarty(pheatmap)
 ###################################################################
 
 #saveRDS(integrated, file = "integrated_subset_clust_renamed_30pc.Rds")

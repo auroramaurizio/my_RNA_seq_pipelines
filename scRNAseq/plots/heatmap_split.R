@@ -11,6 +11,8 @@ suppressPackageStartupMessages(library(future)) # OK
 suppressPackageStartupMessages(library(cowplot)) # OK
 suppressPackageStartupMessages(library(dplyr)) # OK
 library("ggalluvial")
+library(ComplexHeatmap)
+librarty(pheatmap)
 ###################################################################
 
 
