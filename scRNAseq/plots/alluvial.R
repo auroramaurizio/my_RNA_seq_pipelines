@@ -181,15 +181,26 @@ ggplot(pt6,
   theme_bw(base_size = 15) +
   scale_x_discrete(limits = positions)+
   geom_flow(stat = "alluvium", lode.guidance = "forward") +
-  scale_fill_manual(values=c('ARTERIAL' = '#0066FF',
-                             'BARR_END_CAP' = '#336666',
-                             'CAPILLARY_PLVAP-' = '#399933',
-                             'CAPILLARY_PLVAP+' = '#99CC33',
-                             'TIP_1' = '#6600CC',
-                             'TIP_2' = '#FF99CC',
-                             'TIP_3' = '#FF00FF',
-                             '8' = 'grey',
-                             'VENOUS_PLVAP-' = '#990000',
-                             'VENOUS_PLVAP+' = '#FF6666'))
+  scale_fill_manual(values=c('A' = '#0066FF',
+                             'B' = '#336666',
+                             'C' = '#399933'))
 
+dev.off()
+
+
+
+pdf("barplot_bonanomi_toma_kalinski_carr_cond_no_eight_alluvial_transparency.pdf", 15, 10)
+gg <- ggplot(pt4,
+             aes(x = Var2, stratum = Cluster, alluvium = Cluster,
+                 y = freq,
+                 fill = Cluster))  + scale_fill_manual(values=c('ARTERIAL' = '#0066FF',
+                             'B' = '#336666', 
+                             'C' = '#399933',
+                             'V' = '#FF6666')) 
+
+gg + 
+  geom_flow(alpha = 0.3) + 
+  geom_stratum() + 
+  geom_lode()#+
+  #geom_col(width = 0.70)
 dev.off()
