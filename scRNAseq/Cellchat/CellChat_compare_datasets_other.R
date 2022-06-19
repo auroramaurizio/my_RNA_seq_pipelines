@@ -102,7 +102,9 @@ getwd()
 getwd()
 #load R object
 condition2 = readRDS("condition2.Rds")
+pdf("condition2.pdf")
 DimPlot(condition2, split.by = "orig.ident", ncol = 2)
+dev.off()
 #CellChat requires two user inputs: one is the gene expression data of cells, 
 #and the other is either user assigned cell labels (i.e., label-based mode) or 
 #a low-dimensional representation of the single-cell data (i.e., label-free mode). 
@@ -136,12 +138,15 @@ cellchat_condition2 <- createCellChat(object = count_norm_condition2, meta = met
 #> The cell groups used for CellChat analysis are  APOE+ FIB FBN1+ FIB COL11A1+ FIB Inflam. FIB cDC1 cDC2 LC Inflam. DC TC Inflam. TC CD40LG+ TC NKT
 cellchat_condition2 <- addMeta(cellchat_condition2, meta = meta_data_condition2)
 cellchat_condition2 <- setIdent(cellchat_condition2, ident.use = "labels") # set "labels" as default cell identity
+levels(cellchat_condition2@idents) # show factor levels
 groupSize <- as.numeric(table(cellchat_condition2@idents)) # number of cells in each cell group
 
 CellChatDB <- CellChatDB.mouse # use CellChatDB.human if running on mouse data
 showDatabaseCategory(CellChatDB)
 
-filename_xls <- 'CellChatDB_interactionDB.xlsx'
+
+head(CellChatDB$cofactor)
+filename_xls <- 'CellChatDB_interactionDB_human.xlsx'
 write.xlsx(CellChatDB$interaction,
            file= filename_xls, 
            row.names = T,
@@ -809,6 +814,15 @@ head(df.net, 2)
 
 
 
-df.net <- subsetCommunication(cellchat) 
+pdf("injury_outgoing_cell_communic_patters_.pdf", 12,10)
+object.list[[2]] <- identifyCommunicationPatterns(object.list[[2]], pattern = "outgoing", k = nPatterns, width = 10,
+                                                  height = 12)
+dev.off()
+
+# river plot
+pdf("injury_outgoing_alluvial.pdf")
+netAnalysis_river(object.list[[2]], pattern = "outgoing")
+#> Please make sure you have load `library(ggalluvial)` when running this function
+dev.off()
 
 
