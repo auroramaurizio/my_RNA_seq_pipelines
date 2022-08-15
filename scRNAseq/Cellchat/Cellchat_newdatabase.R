@@ -56,6 +56,8 @@ library("Seurat")
 Injury = readRDS("/Users/maurizio.aurora/Injury_EC_MES_MACS_SCHWANN_forCDB_090222_merged_seurat.Rds")
 Intact = readRDS("/Users/maurizio.aurora/Intact_EC_MES_MACS_SCHWANN_forCDB_090222_merged_seurat.Rds")
 
+
+table(orig.ident(Intact))
 DimPlot(Injury)
 DimPlot(Intact)
 
