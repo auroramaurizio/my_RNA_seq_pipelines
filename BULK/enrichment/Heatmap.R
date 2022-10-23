@@ -14,7 +14,7 @@ library(ComplexHeatmap)
 
 
 
-rpkm = read.xlsx("/Users/maurizio.aurora/Dropbox (HSR Global)/WORKSPACE/Task5/bulk/filtered.deseq2.toptable_clean.ALL_contrast.mark_seqc.header_added.notlog.rpkm_copy.xlsx",
+rpkm = read.xlsx("/Users/maurizio.aurora/rpkm_copy.xlsx",
                  sheet = 1,
                  startRow = 1,
                  colNames = TRUE,
@@ -22,8 +22,6 @@ rpkm = read.xlsx("/Users/maurizio.aurora/Dropbox (HSR Global)/WORKSPACE/Task5/bu
 )
 
 
-rpkm = rpkm[c("sample1","sample2",
-              "sample3","sample4")]
 
 
 
@@ -43,7 +41,7 @@ convert_human_to_mouse <- function(gene_list){
 }
 
 
-Cadherins = read.xlsx("/Users/maurizio.aurora/Desktop/Cadherins.xlsx")
+Cadherins = read.xlsx("/Users/maurizio.aurora/Cadherins.xlsx")
 converted_Cadherins = convert_human_to_mouse(Cadherins$Approved.symbol)
 converted_Cadherins = unique(converted_Cadherins)
 
@@ -53,7 +51,7 @@ rpkm_CAM = rpkm[rownames(rpkm) %in% annotation_row,]
 
 counts_filtered_df <- rpkm_CAM[apply(rpkm_CAM, MARGIN = 1, FUN = function(x) sd(x) != 0),]
 
-pdf('Cadherins_bulk_names_new.pdf', 5, 10)
+pdf('Heatmap_ex.pdf', 5, 10)
 pheatmap::pheatmap(as.matrix(rpkm_CAM), 
                    main = "Cadherins",
                    show_rownames = T, 
