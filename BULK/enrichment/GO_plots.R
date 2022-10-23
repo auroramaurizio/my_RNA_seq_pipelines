@@ -114,6 +114,19 @@ if(length(p)>0) { # Discarding the not-significant results (to avoid errors)
 up = head(pathways.dataframe[1:N,], 10)
 up$Condition = "UP"
 
+pup <-ggplot(up, aes(x=Pathway, y=gene.ratio, fill=Log10Adj.P.value)) +
+  geom_bar(stat="identity")+
+  scale_fill_gradient(low = "blue", high = "red") + 
+  scale_x_discrete(limits = dati$Pathway)+
+  labs(title = "UP") +
+  coord_flip()
+
+pdf("up.pdf", 10, 5)
+pup
+dev.off()
+
+
+
 
 
 
