@@ -11,7 +11,7 @@
 #### a simple code to make heatmaps with Pheatmap library + function to convert gene names from human to mouse.
 
 ![Example](Pictures/Heatmap_ex.png)
-*Example of bad tile before correction*
+
 
 
 
