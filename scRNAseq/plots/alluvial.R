@@ -136,6 +136,7 @@ ggplot(test,
 dev.off()
 
 
+EC1 = readRDS("/Users/maurizio.aurora/integrated_without_cluster8.rds")
 
 
 integrated_rn = readRDS("integrated_rn.Rds")
