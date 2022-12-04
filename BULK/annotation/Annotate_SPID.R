@@ -1,6 +1,7 @@
 library("hypeR")
 library("assertr")
 library("tidyr")
+library("dplyr")
 
 options(warn=-1)
 
