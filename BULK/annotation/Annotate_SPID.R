@@ -1,19 +1,4 @@
-#' Annotate_SPID function
-#'
-#' Annotate Surface Protein Coding genes according to EnrichR Libraries
-#'
-#' @param DGE Dataframe containing SP annotated DEG list
-#' @param enrich.database String containg the EnrichR database you would like to consult. Default WikiPathway_2021_Human. 
-#' @param output_tsv Logical. If \code{TRUE}, outputs a tsv file with the results. By default, FALSE.
-#' @return A dataframe with surface protein coding \code{DEGs} annotation
-#' @examples
-#' annotated = Annotate_SPID(DGE, "OMIM_Disease")  
-#' @section Warning:
-#' Bla bla bla
-#' @family aggregate functions
-#' @seealso \code{\link{hello}} for DGE, and \code{\link{hello}} for Gene2SProtein analysis
-#' @export
-
+library("hypeR")
 
 options(warn=-1)
 
