@@ -1,5 +1,6 @@
 library("hypeR")
 library("assertr")
+library("tidyr")
 
 options(warn=-1)
 
