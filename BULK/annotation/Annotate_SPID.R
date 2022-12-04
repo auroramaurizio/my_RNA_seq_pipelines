@@ -2,6 +2,7 @@ library("hypeR")
 library("assertr")
 library("tidyr")
 library("dplyr")
+library("magrittr")
 
 options(warn=-1)
 
