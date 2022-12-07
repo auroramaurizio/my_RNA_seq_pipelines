@@ -47,15 +47,42 @@ write.xlsx(apCAFs_LEUB_vs_LEUA,
            row.names = T,
            asTable = T)
 
+setwd("/Users/maurizio.aurora/Dropbox (HSR Global)/WORKSPACE/Brendolan/BrendolanA_1190_scRNAseq/9_bioinfo/LEUA_LEUB_merged_ctrls_EYFP+Marker_genes/figures/STROMA/CAFs/CAFs_final/DEGs_logfc0_min.pct0.1")
 
 
-dfList=list(myCAFs_LEUB_vs_LEUA,
+suppressMessages(library(openxlsx))
+
+apCAFs_LEUA_vs_CTRL = read.xlsx("apCAFs_LEUA_vs_CTRL_logfc0_min.pct0.1.xlsx", rowNames = T)
+apCAFs_LEUB_vs_CTRL= read.xlsx("apCAFs_LEUB_vs_CTRL_logfc0_min.pct0.1.xlsx", rowNames = T)
+apCAFs_LEUB_vs_LEUA= read.xlsx("apCAFs_LEUB_vs_LEUA_logfc0_min.pct0.1.xlsx", rowNames = T)
+iCAFs_LEUA_vs_CTRL = read.xlsx("iCAFs_LEUA_vs_CTRL_logfc0_min.pct0.1.xlsx", rowNames = T)
+iCAFs_LEUB_vs_CTRL = read.xlsx("iCAFs_LEUB_vs_CTRL_logfc0_min.pct0.1.xlsx", rowNames = T)
+iCAFs_LEUB_vs_LEUA = read.xlsx("iCAFs_LEUB_vs_LEUA_logfc0_min.pct0.1.xlsx", rowNames = T)
+myCAFs_LEUA_vs_CTRL = read.xlsx("myCAFs_LEUA_vs_CTRL_logfc0_min.pct0.1.xlsx", rowNames = T)
+myCAFs_LEUB_vs_CTRL = read.xlsx("myCAFs_LEUB_vs_CTRL_logfc0_min.pct0.1.xlsx", rowNames = T)
+myCAFs_LEUB_vs_LEUA = read.xlsx("myCAFs_LEUB_vs_LEUA_logfc0_min.pct0.1.xlsx", rowNames = T)
+
+
+
+dfList=list(apCAFs_LEUA_vs_CTRL,
+            apCAFs_LEUB_vs_CTRL,
+            apCAFs_LEUB_vs_LEUA,
+            iCAFs_LEUA_vs_CTRL,
+            iCAFs_LEUB_vs_CTRL,
             iCAFs_LEUB_vs_LEUA,
-            apCAFs_LEUA_vs_CTRL)
+            myCAFs_LEUA_vs_CTRL,
+            myCAFs_LEUB_vs_CTRL,
+            myCAFs_LEUB_vs_LEUA)
 
-names(dfList)<-c("myCAFs_LEUB_vs_LEUA",
+names(dfList)<-c("apCAFs_LEUA_vs_CTRL",
+            "apCAFs_LEUB_vs_CTRL",
+            "apCAFs_LEUB_vs_LEUA",
+            "iCAFs_LEUA_vs_CTRL",
+            "iCAFs_LEUB_vs_CTRL",
             "iCAFs_LEUB_vs_LEUA",
-            "apCAFs_LEUA_vs_CTRL")
+            "myCAFs_LEUA_vs_CTRL",
+            "myCAFs_LEUB_vs_CTRL",
+            "myCAFs_LEUB_vs_LEUA")
 
 
 
