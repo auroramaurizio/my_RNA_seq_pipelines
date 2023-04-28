@@ -1,19 +1,24 @@
-#BiocManager::install("NormqPCR") this is an alternative to try
+
 #I run NormFinder for R (https://moma.dk/files/newDocOldStab_v5.pdf and https://pubmed.ncbi.nlm.nih.gov/15289330/) on pcr CTs.
-#library(openxlsx)
+library(openxlsx)
 
-#all timepoints and tissues together
-
-test = read.xlsx("/Users/maurizio.aurora/Downloads/sample_normfinder.xlsx")
-head(test)
-Normfinder(test)
-?read.xlsx
-# Version history: see bottom of file
+#BiocManager::install("NormqPCR") # this is an alternative to try
 
 
+
+# install 
 setwd("/Users/maurizio.aurora/Downloads/Normfinder")
 source("r.NormOldStab5.txt")
 getwd()
+
+#place input files in the NormFinder directory together with r.NormOldStab5.txt
+#try NormFinder on the test dataset sample_normfinder.txt
+
+Result=Normfinder("sample_normfinder.txt")
+
+
+#all timepoints and tissues together
+
 Result=Normfinder("all.txt")
 head(Result)
 write.xlsx(Result, "all.xlsx", rowNames = TRUE)
