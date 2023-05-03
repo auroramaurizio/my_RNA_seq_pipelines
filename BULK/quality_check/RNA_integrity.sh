@@ -11,3 +11,7 @@
 #├── PTCL_0010_RNA.bam.bai
 
 tin.py -i TIN -r file.bed -c 5 -n 50 -s
+
+# calculate-tin.py with respect to tin.py takes advantage of parallelization
+
+calculate-tin.py -i file.bam -r file.bed -c 5 -n 50 -s -p 10

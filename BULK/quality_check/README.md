@@ -3,6 +3,9 @@
 ### RNA_integrity.sh: 
 #### RSeQC: An RNA-seq Quality Control Package: https://rseqc.sourceforge.net 
 
+#Evaluate RNA integrity with tin-score-calculation (should be faster than TIN.py) 
+#### https://github.com/zavolanlab/tin-score-calculation
+
 
 
 
