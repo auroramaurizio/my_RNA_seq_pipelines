@@ -61,4 +61,30 @@ pdf("myC_Violin_split.pdf", 7, 5)
 pmc | pic | papc
 dev.off()
 
+#######################################################
+
+
+St_c = readRDS("S_c.RDS")
+
+md = St_c@meta.data
+## change its rownames according to your wish
+md$cond = gsub("combined_ctrl", "Ctrl", md$stim)
+md$cond = gsub("LEUA", "leuk-A", md$cond)
+md$cond = gsub("LEUB", "leuk-B", md$cond)
+## check that md has the desired format of rownames
+## insert it back
+St_c@meta.data = md
+
+my_comparisons <- list( c("Ctrl", "leuk-A"), c("Ctrl", "leuk-B"), c("leuk-A", "leuk-B") )
+
+
+VlnPlot(St_c, "myGene", assay = "RNA", group.by = "cond", cols = c("#F8766D","#00BA38","#619CFF"), pt.size = 0)+ 
+  stat_summary(fun=median, geom="point", color="black", shape = 95,  size = 15)  +
+  labs(caption="myGene") + stat_compare_means(comparisons = my_comparisons)+ # Add pairwise comparisons p-value
+  stat_compare_means(label.y = 50)+
+  theme(plot.caption = element_text(hjust=0.5, size=rel(1.2)))
+
+
+
+
 
