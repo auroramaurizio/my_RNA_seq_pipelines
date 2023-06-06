@@ -62,7 +62,7 @@ pmc | pic | papc
 dev.off()
 
 #######################################################
-
+#add pvalue to plot
 
 St_c = readRDS("S_c.RDS")
 
