@@ -23,7 +23,7 @@ else:
 inputdir="/dataset/"
 
 
-SAMPLES = ["2_i","3_m","4_b]
+SAMPLES = ["2_i","3_m","4_b"]
 
 fastq_dir = "demux"
 transcriptome = "cellranger_genomes/refdata-gex-mm10-2020-A_TCL1"

@@ -55,3 +55,12 @@ write.csv(meta_data_general, file = "meta_data_dev_brLN_seurat.csv")
 
 
 #later remove suffix from cells due to integration
+
+
+
+
+Scrivo qui update sulle cellule isolate con i nuovi marcatori specifici per bladder cancer validati da Doglioni tra quelli proposti da me e Sofia.
+Come anticipavo lo scorso meeting le uniche cellule CNV+ tra quelle isolate dai pazienti 271022, 081122, e 091122 sono: BLAD271022_A3(PERCP/EPCAM/CLAU/CD24),
+BLAD091122_A3(CD24 PICCOLE), BLAD091122_C3 (CD24 PICCOLE), URIN091122_E3 (EPCAM/CLAU/CD318/CD24), URIN091122_A5(DAPI). Quindi 1 cellula nel 271022, nessuna
+cellula nel 081122 e 4 cellule nel 091122. Gianna poi diceva che vediamo cellule positive a questi marcatori anche nei controlli sani.. un po' come
+Succedeva con EpCAMneg/Clau/Vim ... Peccato.

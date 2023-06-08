@@ -69,3 +69,10 @@ convertMouseGeneList <- function(x){
 
 converted=convertMouseGeneList(gene_list)
 
+if (!require("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+
+BiocManager::install("hypeR")
+
+
+library("hypeR")
