@@ -4,13 +4,20 @@ library(tidyverse)
 library(magrittr)
 library(liana)
 library(Seurat)
-install.packages("entropy")
-devtools::install_github("tanlabcode/CytoTalk")
+#install.packages("entropy")
+#devtools::install_github("tanlabcode/CytoTalk")
 #install.packages("openxlsx", dependencies=TRUE)
 library(openxlsx)
 
 #packageVersion("liana")
 #0.1.12
+
+
+#https://saezlab.github.io/liana/ 
+#https://www.nature.com/articles/s41467-022-30755-0
+#https://saezlab.github.io/liana/articles/liana_tutorial.html # R tutorial
+#https://liana-py.readthedocs.io/en/latest/notebooks/basic_usage.html # Python tutorial
+
 
 ## CCC Resources
 #`liana` provides CCC resources obtained and formatted via [`OmnipathR`](https://github.com/saezlab/OmnipathR) which are then converted to the appropriate format to each method.
@@ -33,20 +40,14 @@ show_methods()
 
 #`liana` takes `Seurat` and `SingleCellExperiment` objects as input, containing processed counts and clustered cells.
 #```{r load_data}
-liana_path <- system.file(package = "liana")
-testdata <-
-  readRDS(file.path(liana_path , "testdata", "input", "testdata.rds"))
-testdata %>% dplyr::glimpse()
+#liana_path <- system.file(package = "liana")
+#testdata <-
+#  readRDS(file.path(liana_path , "testdata", "input", "testdata.rds"))
+#testdata %>% dplyr::glimpse()
 #```
 
-head(testdata@assays$RNA)
-
-DefaultAssay(testdata)
-
-
+# Load and preprocess my seurat object ("nerve intact" dataset)
 test = readRDS(file ="integrated_intact_sub.rds")
-
-
 
 a = test
 b = a$SantoCellType
@@ -65,15 +66,6 @@ for (i in 1:dim(tmp)[2]){
 names(vettore_finale) = names(b)
 Idents(test) = vettore_finale
 
-DimPlot(test)
-
-DimPlot(test)
-head(test[[]])
-
-#table(Idents(test))
-#Idents(test) = test$SantoCellType
-
-levels(test)
 testdata <- subset(test, idents = "UNDET", invert = TRUE)
 
 levels(testdata)
@@ -101,23 +93,19 @@ new.cluster.ids.lit <- c('MES_ENDONEUR',
                          'SCHWANN'
 )
 
-
 names(new.cluster.ids.lit) <- levels(testdata)
 object_new <- RenameIdents(testdata, new.cluster.ids.lit)
 
 testdata = object_new
 
-DimPlot(testdata)
 #testdata <- subset(test, idents = "MES_DIFF","MES_DIFF*", "MES_DIVIDING", "MES_ENDONEUR","MES_EPINEUR","MES_PERINEUR")
 #testdata <- subset(test, idents = "UNDET", invert = TRUE)
-table(Idents(testdata))
 
+#liana reads the label associated CelltType info
 DefaultAssay(testdata) = "RNA"
 testdata$label = Idents(testdata)
-table(testdata$label)
 testdata$seurat_annotations = testdata$label
 
-head(testdata[[]])
 #`liana_wrap` calls a number of methods and and each method is run with the provided resource(s).
 
 #We will now call all methods that are currently available in liana.
@@ -125,7 +113,7 @@ head(testdata[[]])
 #Here we use only the `Consensus` (Default) CCC resource, but any of the 
 #aforementioned ones (available via `show_resources()`) can be added to the `resource` parameter
 #```{r liana_run, message = FALSE, print = FALSE, results='hide'}
-# Run liana
+# Run liana (for mouse data use MouseConsensus)
 
 
 liana_test <- liana_wrap(testdata,
@@ -134,17 +122,17 @@ liana_test <- liana_wrap(testdata,
 
 
 #Cell identities with less than 5 cells: MES_DIFF* were removed!
-saveRDS(liana_test, "liana_test_intact_A.Rds")
+#saveRDS(liana_test, "liana_test_intact_A.Rds")
 saveRDS(liana_test, "liana_test_intact_B.Rds")
 #liana_test_i= readRDS("liana_test_intact.Rds")
 
 
 liana_test = readRDS("liana_test_intact_B.Rds")
 
-
-
 #liana_test= readRDS("liana_test_intact.Rds")
 #liana_test
+
+# save output of liana_test 
 natmi = liana_test$natmi
 connectome = liana_test$connectome
 logfc =liana_test$logfc
@@ -158,47 +146,6 @@ write.table(logfc, "logfc_intact.txt", sep = "\t", quote = FALSE)
 write.table(sca, "sca_intact.txt", sep = "\t", quote = FALSE)
 write.table(cellphonedb, "cellphonedb_intact.txt", sep = "\t", quote = FALSE)
 write.table(cytotalk, "cytotalk_intact.txt", sep = "\t", quote = FALSE)
-
-
-liana_test_inj = readRDS("liana_test_1.Rds")
-
-
-
-natmi = liana_test_inj$natmi
-connectome = liana_test_inj$connectome
-logfc =liana_test_inj$logfc
-sca = liana_test_inj$sca
-cellphonedb= liana_test_inj$cellphonedb
-cytotalk = liana_test_inj$cytotalk
-
-write.table(natmi, "natmi_inj.txt", sep = "\t", quote = FALSE)
-write.table(connectome, "connectome_inj.txt", sep = "\t", quote = FALSE)
-write.table(logfc, "logfc_inj.txt", sep = "\t", quote = FALSE)
-write.table(sca, "sca_inj.txt", sep = "\t", quote = FALSE)
-write.table(cellphonedb, "cellphonedb_inj.txt", sep = "\t", quote = FALSE)
-write.table(cytotalk, "cytotalk_inj.txt", sep = "\t", quote = FALSE)
-
-
-list_of_datasets <- list("natmi" = natmi, "connectome" = connectome, "logfc" = logfc, "sca" = sca, "cellphonedb" = cellphonedb, "cytotalk" = cytotalk )
-write.xlsx(list_of_datasets, file = "liana_test_injury.xlsx")
-
-
-
-#install.packages("openxlsx", dependencies=TRUE)
-
-#install.packages("entropy")
-#devtools::install_github("tanlabcode/CytoTalk")
-
-#liana_test_bis <- liana_wrap(testdata,
-#                             method = c("natmi", "connectome", "logfc", "sca", "cellphonedb","cytotalk", "cytotalk"),
-#                             resource = c("MouseConsensus"), permutation.params = list(nperms = 100), 
-#                             parallelize = T,
-#                             workers = 10,
-#                             seed = 10,
-#                             supp_columns = c("ligand.expr", "receptor.expr" "ligand.stat", "receptor.stat", "ligand.pval", "receptor.pval", "ligand.FDR", "receptor.FDR"))
-
-#saveRDS(liana_test_bis, "liana_test_bis_intact.Rds")
-
 
 liana_test$natmi$
 # Liana returns a list of results, each element of which corresponds to a method
@@ -253,14 +200,11 @@ saveRDS(liana_test, "liana_test_1_aggregate_intact.Rds")
 #interactions for a single method (see example below).
 
 #```{r liana_dotplot, warning=FALSE, fig.width=11, fig.height=8}
-liana_test = readRDS("liana_test_1_aggregate_intact.Rds")
+#liana_test = readRDS("liana_test_1_aggregate_intact.Rds")
 
-
+# rename cell IDs
 liana_test <- liana_test %>% 
   mutate(source = recode(source, TIP_3 = 'TIP', TIP_1 = 'IMMAT', TIP_2 = 'PROLIF',))
-
-liana_test <- liana_test %>% 
-  mutate(target = recode(target, TIP_3 = 'TIP', TIP_1 = 'IMMAT', TIP_2 = 'PROLIF',))
 
 
 pdf("liana_dotplot_intact.pdf", 20, 10)
@@ -294,6 +238,32 @@ liana_test %>%
 dev.off()
 
 
+
+# on a separate notebook I performed the same analysis on the "nerve injury" dataset
+
+
+liana_test_inj = readRDS("liana_test_1.Rds")
+
+#save injury output
+
+natmi = liana_test_inj$natmi
+connectome = liana_test_inj$connectome
+logfc =liana_test_inj$logfc
+sca = liana_test_inj$sca
+cellphonedb= liana_test_inj$cellphonedb
+cytotalk = liana_test_inj$cytotalk
+
+write.table(natmi, "natmi_inj.txt", sep = "\t", quote = FALSE)
+write.table(connectome, "connectome_inj.txt", sep = "\t", quote = FALSE)
+write.table(logfc, "logfc_inj.txt", sep = "\t", quote = FALSE)
+write.table(sca, "sca_inj.txt", sep = "\t", quote = FALSE)
+write.table(cellphonedb, "cellphonedb_inj.txt", sep = "\t", quote = FALSE)
+write.table(cytotalk, "cytotalk_inj.txt", sep = "\t", quote = FALSE)
+
+
+list_of_datasets <- list("natmi" = natmi, "connectome" = connectome, "logfc" = logfc, "sca" = sca, "cellphonedb" = cellphonedb, "cytotalk" = cytotalk )
+write.xlsx(list_of_datasets, file = "liana_test_injury.xlsx")
+
 liana_test_inj = readRDS("liana_test_1_aggregate.Rds")
 
 
@@ -318,9 +288,6 @@ liana_test_inj %>%
                 target_groups = c("MES_DIFF", 'MES_DIFF*','MES_EPINEUR','MES_DIVIDING','MES_PERINEUR','MES_ENDONEUR'),
                 ntop = 20)
 dev.off()
-
-
-
 
 
 
@@ -366,6 +333,9 @@ liana_trunc_inj = readRDS("liana_test_1_aggregate.Rds")
 #saveRDS(liana_test, "liana_test_1_aggregate_intact.Rds")
 
 
+# in the intact we do not have MES_DIFF* so, in order to make a comparable heatmap,
+# I'll remove them also from the Injury
+
 liana_trunc_inj_tem = liana_trunc_inj[!liana_trunc_inj$source == "MES_DIFF*", ]
 liana_trunc_inj_temp = liana_trunc_inj_tem[!liana_trunc_inj_tem$target == "MES_DIFF*", ]
 
@@ -378,9 +348,12 @@ liana_trunc <- liana_trunc %>%
 
 
 
-gg1 <- heat_freq(liana_trunc)
-gg2 <- heat_freq(liana_trunc_inj_temp)
-#################
+# plot a nice heatmap comparing Intact and Injury LR interactions
+
+
+gg1 <- heat_freq(liana_trunc) # intact
+gg2 <- heat_freq(liana_trunc_inj_temp) #injury
+
 
 gg1_orig = gg1
 gg2_orig = gg2
@@ -529,7 +502,7 @@ ht2
 injury_heatmap@column_order
 intact_heatmap@column_order
 
-pdf('cellChat_interactions_heatmap_clustered_new.pdf', height = 4)
+pdf('Liana_interactions_heatmap_clustered_new.pdf', height = 4)
 intact_heatmap + injury_heatmap
 dev.off()
 
