@@ -1,0 +1,20 @@
+name: liana
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - r-base
+  - r-tidyverse
+  - r-magrittr
+  - r-devtools
+  - bioconductor-complexheatmap
+  - r-cellchat
+  - bioconductor-singlecellsignalr
+  - bioconductor-deseq2
+  - bioconductor-scater
+  - randomcolor
+  - bioconductor-scde
+  - r-v8
+  - r-stringi
+prefix: /home/maurizio.aurora/liana
