@@ -655,8 +655,80 @@ liana_test <- liana_wrap(testdata,
 liana_defaults()
 
 
+library(openxlsx)
+
+setwd("/Users/maurizio.aurora")
+
+inj = readRDS("integrated_inj_sub.rds")
+unique(inj$orig.ident)
+
+
+intact = read.table("liana_filter_aggregate_rank_intact.txt", sep = "\t")
+
+write.xlsx(intact,
+           file= "liana_filter_aggregate_rank_intact.xlsx", 
+           row.names = F,
+           asTable = T)
+
+
+inj = read.table("liana_filter_aggregate_rank_D7.txt", sep = "\t")
+
+write.xlsx(inj,
+           file= "liana_filter_aggregate_rank_D7.xlsx", 
+           row.names = F,
+           asTable = T)
+
+
+intact_source = intact[grepl(c("TIP_2"),intact$source), ]
+intact_target = intact_source[grepl(c("MES"),intact_source$target), ]
 
 
 
+colnames(intact_new)
+intact_neww = intact_target[order(intact_target$aggregate_rank),]
 
 
+unique(intact_neww$target)
+intact_neww$LR = paste(intact_neww$ligand.complex,intact_neww$receptor.complex, sep ="->")
+
+
+
+intact_neww$LR  <- factor(x = STROMA$cond, levels = c("Ctrl","leuk-A" ,"leuk-B"))
+
+
+lev =  c("Apln->Grm7","Col18a1->Gpc1", 
+        "Psen1->Notch3", "Col4a2->Cd44",   
+        "Bsg->Slc16a1", "Col4a2->Itgb5",     
+        "Lama5->Sdc1", "Col4a2->Sdc1",   
+        "Fam3c->Ffar2","Gnai2->Ednra",   
+        "Col4a1->Cd44","Ado->Adora1",      
+        "Lamc1->Itga6_Itgb4", "Gnai2->Cnr1",      
+        "Lama4->Itga6_Itgb4", "Col4a1->Sdc1",   
+        "Col4a2->Itgb5", "Lama5->Itga6_Itgb4",
+        "Calr->Lrp1")
+hin = head(intact_neww, 20)
+hin$LR  <- factor(x = hin$LR, levels = c("Apln->Grm7","Col18a1->Gpc1", 
+                                         "Psen1->Notch3", "Col4a2->Cd44",   
+                                         "Bsg->Slc16a1", "Col4a2->Itgb5",     
+                                         "Lama5->Sdc1", "Col4a2->Sdc1",   
+                                         "Fam3c->Ffar2","Gnai2->Ednra",   
+                                         "Col4a1->Cd44","Ado->Adora1",      
+                                         "Lamc1->Itga6_Itgb4", "Gnai2->Cnr1",      
+                                         "Col4a1->Sdc1",
+                                         "Lama5->Itga6_Itgb4",
+                                         "Calr->Lrp1"))
+
+col.range = c(0,11)
+p <- ggplot(hin, aes(target,LR)) +
+  # + geom_point() 
+  geom_point(mapping = aes_string(size = "natmi.edge_specificity", color = "sca.LRscore")) + 
+  scale_color_gradientn(colours = c("blue", "red"))+
+  scale_size_continuous(range=c(1,7), name="specificity")
+  #scale_size_binned(limits = c(0.1, 0.5), n.breaks = 5)+
+  theme(axis.text.x = element_text( color='black', face="bold.italic", size=8)) +
+  labs(title = "UP COND_B") 
+
+
+pdf("pathway_COND_B_vs_COND_A_stroma_sc_fdr_up_dotplot_CAMs_test_6.pdf",9, 7)
+p
+dev.off()
