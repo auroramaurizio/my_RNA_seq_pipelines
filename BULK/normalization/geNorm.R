@@ -38,5 +38,12 @@ setwd("/Users/maurizio.aurora/geNorm")
 
 write.xlsx(geNorm, "geNorm_Olf.Epith.xlsx", rowNames = T)
 
+Olf.Epith = read.xlsx("/Users/maurizio.aurora/geNorm/geNorm_Olf.Epith.xlsx", 
+                      rowNames = TRUE)
+
+pdf("geNorm_Olf.Epith.pdf")
+plotM(Olf.Epith)
+dev.off()
+
 
 
