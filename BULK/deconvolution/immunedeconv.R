@@ -346,7 +346,7 @@ df_melted <- melt(df, id.vars = "ScoreType")
 # Rename the columns for better readability
 colnames(df_melted) <- c("ScoreType", "Sample", "Value")
 
-pdf("Breast_estimate_boxplot.pdf")
+pdf("ovary_estimate_boxplot.pdf")
 ggplot(df_melted, aes(x = ScoreType, y = Value)) +
   geom_boxplot() +
   labs(x = "Score Type", y = "Value", title = "Breast Estimate") +
