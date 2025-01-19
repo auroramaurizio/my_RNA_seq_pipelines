@@ -116,6 +116,18 @@ for (i in names(dfList)) {
   pdf(paste0('GSEA/MSigDB_LeuA_vs_Ctrl', i, '.pdf'), width = 6, height = 5)
   gseaplot2(gsea_results, title = "MSigDB", geneSetID = 1)
   dev.off()
+
+  pdf("GSEA__NES.pdf", 5,5)
+  ggplot(gsea_results, aes(x = reorder(ID, NES), y = NES, fill = ID)) +
+  geom_bar(stat = "identity", position = position_dodge(), width = 0.6) +
+  #scale_fill_manual(values = c('chr1' = 'red')) +
+  coord_flip() +
+  theme_minimal() +
+  labs(title = "GSEA Normalized Enrichment Score (NES)",
+       x = "Pathways",
+       y = "NES") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  dev.off()
 }
 
 
