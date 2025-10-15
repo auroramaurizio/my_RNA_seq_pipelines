@@ -1,0 +1,90 @@
+#############################################
+#   Snakefile — build Cell Ranger reference #
+#   Author: Aurora Maurizio                 #
+#############################################
+
+import os
+
+# ===== CONFIGURATION =====
+# Base directory where genome and transgene FASTA/GTF files are stored
+DATADIR_SHORT = "."  # <-- change to your actual base directory
+
+# Create logs directory if not exists
+path = "logs_slurm"
+os.makedirs(path, exist_ok=True)
+print(f"Log directory: {path}")
+
+
+# ===== INPUTS =====
+GENOME = "GRCm39"
+TRANSGENE = "TdTomato"
+
+# ===== RULES =====
+rule all:
+    """
+    Main output: Cell Ranger reference directory
+    """
+    input:
+        directory(f"reference/{GENOME}_{TRANSGENE}_cellranger_ref")
+
+rule prepare_and_build_cellranger_ref:
+    """
+    Combine genome FASTA/GTF with transgene FASTA (auto-generate GTF if missing)
+    and build a Cell Ranger reference.
+    """
+    input:
+        genome_fa = f"{GENOME}_2024-A/{GENOME}/fasta/genome.fa",
+        genome_gtf = f"{GENOME}_2024-A/{GENOME}/genes/genes.gtf",
+        transgene_fa = f"{TRANSGENE}.fa"
+    output:
+        directory(f"reference/{GENOME}_{TRANSGENE}_cellranger_ref")
+    params:
+        combined_fa = f"reference/{GENOME}_{TRANSGENE}.fa",
+        combined_gtf = f"reference/{GENOME}_{TRANSGENE}.gtf",
+        genome_name = f"{GENOME}_{TRANSGENE}",
+        transgene_gtf = f"reference/{TRANSGENE}.gtf",
+        threads = 8,
+        memgb = 64
+    resources:
+        time_min = 50000,   # <-- FIX: define the missing key
+        mem_mb = 64000,   # optional, if your profile expects it
+        cpus = 8
+    log:
+        f"logs_slurm/mkref_{GENOME}_{TRANSGENE}.log"
+    shell:
+        """
+        echo "===== Building Cell Ranger Reference ====="
+        echo "Genome: {input.genome_fa}"
+        echo "Transgene: {input.transgene_fa}"
+
+        bash -c '
+        . $HOME/.bashrc
+        conda activate demux
+
+        # 1️⃣ Merge FASTA files
+        mkdir -p reference
+        cat {input.genome_fa} {input.transgene_fa} > {params.combined_fa}
+
+        # 2️⃣ Auto-generate transgene GTF if missing
+        echo "Generating synthetic GTF for {input.transgene_fa}"
+        transgene_id=$(grep ">" {input.transgene_fa} | sed 's/>//; s/ .*//')
+        seq_length=$(grep -v ">" {input.transgene_fa} | tr -d '\n' | wc -c)
+        echo -e "${{transgene_id}}\ttransgene\texon\t1\t${{seq_length}}\t.\t+\t.\tgene_id \"${{transgene_id}}\"; transcript_id \"${{transgene_id}}.1\"; exon_number \"1\";" >> {params.transgene_gtf}
+
+        # 3️⃣ Merge genome + transgene GTFs
+        awk '$1 !~ /^#/ {{print $0}}' {input.genome_gtf} > {params.combined_gtf}
+        awk '$1 !~ /^#/ {{print $0}}' {params.transgene_gtf} >> {params.combined_gtf}
+
+        # 4️⃣ Run Cell Ranger mkref
+        cellranger mkref \
+            --genome={params.genome_name} \
+            --fasta={params.combined_fa} \
+            --genes={params.combined_gtf} \
+            --nthreads={params.threads} \
+            --memgb={params.memgb} \
+            --output-dir={output} \
+            &> {log}
+        conda deactivate'
+        echo "===== Done. Reference built at {output} ====="
+        """
+
